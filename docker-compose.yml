@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:14
+    env_file: .env
+    volumes:
+      - vol_postgres_db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build:
+      context: .
+    env_file: .env
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+      - "3020:3020"
+    depends_on:
+      - db
+volumes:
+  vol_postgres_db:
+    driver: local
