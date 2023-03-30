@@ -8,7 +8,11 @@ cryptography==3.3.2
 debugpy
 Django==4.1
 django-environ==0.9.0
+django-filter
+djangorestframework==3.12
+drf-yasg
 idna==2.9
+markdown
 pillow
 pre-commit
 psycopg2-binary>=2.8
