@@ -24,8 +24,8 @@ env = environ.Env()
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = env.str("SECRET_KEY")
-SECRET_KEY = "django-insecure-pu!d(7m0b*%z&f7-wgb0!4jw=*37dix#e4@_ff$sydnzke87r=" 
+# SECRET_KEY = env.str("SECRET_KEY")
+SECRET_KEY = "django-insecure-pu!d(7m0b*%z&f7-wgb0!4jw=*37dix#e4@_ff$sydnzke87r="
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DJANGO_DEBUG", default=False)
@@ -36,13 +36,16 @@ ALLOWED_HOSTS = tuple(env.list("ALLOWED_HOSTS", default=[]))
 # Application definition
 
 INSTALLED_APPS = [
+    "registration",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'users',
+    "drf_yasg",
+    "rest_framework",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -129,13 +132,45 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# Auth redirect
+LOGOUT_REDIRECT_URL = "home"
+
+# S3 BUCKETS CONFIG
+USE_S3 = env.bool("USE_S3")
+
+if USE_S3:
+
+    AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_FILE_OVERWRITE = env.bool("AWS_S3_FILE_OVERWRITE")
+    AWS_DEFAULT_ACL = env.str("AWS_DEFAULT_ACL")
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+    # s3 static settings
+    AWS_LOCATION = "static"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    # Django-storage
+    # for django<4.2
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    # for django >= 4.2
+    # STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
+
+else:
+    STATIC_URL = "/static/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR),)
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# USERS
-AUTH_USER_MODEL = 'users.User'
 
 if os.environ.get("RUN_MAIN") or os.environ.get("WERKZEUG_RUN_MAIN"):
     try:
