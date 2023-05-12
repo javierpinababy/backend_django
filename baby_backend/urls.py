@@ -21,6 +21,8 @@ from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from video.api.router import router_video
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Rayuela API",
@@ -37,6 +39,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("registration.api.router")),
+    path("api/", include(router_video.urls)),
     path(
         "docs/",
         schema_view.with_ui("swagger", cache_timeout=0),
