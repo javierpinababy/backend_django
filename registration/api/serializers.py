@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from registration.models import User
+from registration.models import User, Profile
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -16,3 +16,19 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = [
+            "id",
+            "avatar",
+            "bio",
+            "link",
+            "user.email",
+            "user.username",
+            "user.first_name",
+            "user.date_joined",
+        ]
+        # mirar bien y usar profile
