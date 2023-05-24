@@ -48,4 +48,4 @@ urlpatterns = [
     path("redocs/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/", include("registration.urls")),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
