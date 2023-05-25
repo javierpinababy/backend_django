@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 
 def upload_video_path(instance, filename):
+    print(f"filename: {filename}")
     old_instance = Video.objects.get(pk=instance.pk)
     old_instance.video.delete()
     return "video/" + filename
