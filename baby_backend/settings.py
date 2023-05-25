@@ -154,7 +154,6 @@ LOGOUT_REDIRECT_URL = "home"
 USE_S3 = env.bool("USE_S3")
 
 if USE_S3:
-
     AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME")
@@ -165,18 +164,22 @@ if USE_S3:
     # s3 static settings
     AWS_LOCATION = "static"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    # django < 4.2
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3StaticStorage"
+    # django >= 4.2
+    # STORAGES = {"staticfiles": {"BACKEND": "storages.backends.s3boto3.S3StaticStorage"}}
     # Django-storage
     # for django<4.2
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     # for django >= 4.2
     # STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
 
+
 else:
-    STATIC_URL = "/static/"
+    STATIC_URL = "static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR),)
+STATICFILES_DIRS = ((os.path.join(BASE_DIR), "static"),)
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
