@@ -4,8 +4,11 @@ from django.contrib.auth.models import User
 
 
 def upload_video_path(instance, filename):
+    print(f"filename_vide:{filename}")
     ext = filename.split(".")[-1]
     filename = "%s.%s" % (instance.id, ext)
+    print(f"ext:{ext}")
+    print(f"filename_vide:{filename}")
     return os.path.join("video/", filename)
 
 
