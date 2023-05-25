@@ -9,6 +9,7 @@ debugpy
 Django==4.1
 django-environ==0.9.0
 django-storages
+django-filter
 drf-yasg
 djangorestframework>=3.13.1,!=3.14.0
 djangorestframework-simplejwt
