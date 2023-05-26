@@ -26,9 +26,5 @@ class UserSerializer(serializers.ModelSerializer):
             "avatar",
             "bio",
             "link",
-            "user.email",
-            "user.username",
-            "user.first_name",
-            "user.date_joined",
         ]
         # mirar bien y usar profile
