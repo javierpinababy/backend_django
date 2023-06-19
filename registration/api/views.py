@@ -21,5 +21,6 @@ class LoginView(APIView):
 
         if serializer.is_valid(raise_exception=True):
             print(f"serializer: {serializer}")
-            serializer.save()
+            # serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
