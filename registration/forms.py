@@ -60,3 +60,8 @@ class EmailForm(forms.ModelForm):
                     "El email ya está registrado, prueba con otro."
                 )
         return email
+
+
+class LoginForm(forms.Form):
+    Username = forms.EmailField(required=True, help_text="username")
+    Password = forms.CharField(widget=forms.PasswordInput())

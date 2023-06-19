@@ -28,3 +28,17 @@ class UserSerializer(serializers.ModelSerializer):
             "link",
         ]
         # mirar bien y usar profile
+
+
+class TestUserSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=200)
+    password = serializers.CharField()
+
+    def validate_username(self, value):
+        if value == "":
+            raise serializers.ValidationError("Tiene que indicar un nombre de usuario")
+        print(value)
+        return value
+
+    def validate(self, data):
+        return data
