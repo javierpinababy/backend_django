@@ -30,8 +30,8 @@ class LoginView(APIView):
             print(f"serializer.username: {serializer.username}")
             # serializer.save()
 
-            username = serializer.username
-            password = serializer.password
+            username = serializer.data.get("username")
+            password = serializer.data.get("password")
 
             """response = cognito_initiate_auth(username=username, password=password)
             request.session["AuthenticationResult"] = response.get(
