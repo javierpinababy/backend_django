@@ -25,15 +25,14 @@ class LoginView(APIView):
         serializer = TestUserSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            print(f"serializer: {serializer}")
-            print(f"serializer.data: {serializer.data}")
-            print(f"serializer.username: {serializer.username}")
             # serializer.save()
 
             username = serializer.data.get("username")
             password = serializer.data.get("password")
 
-            """response = cognito_initiate_auth(username=username, password=password)
+            response = cognito_initiate_auth(username=username, password=password)
+            print(f"response: {response}")
+
             request.session["AuthenticationResult"] = response.get(
                 "AuthenticationResult"
             )
@@ -42,7 +41,7 @@ class LoginView(APIView):
             user_data = get_user_data(id_token)
 
             request.session["user_data"] = user_data
-            request.session["groups"] = user_data["cognito:groups"]"""
+            request.session["groups"] = user_data["cognito:groups"]
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
