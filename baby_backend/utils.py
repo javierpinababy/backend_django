@@ -18,11 +18,18 @@ def cognito_initiate_auth(username: str, password: str):
     region = env("AWS_REGION")
     auth_flow = env("AWS_COGNITO_AUTHFLOW")
 
+    print(f"client_id: {client_id}")
+    print(f"client_secret: {client_secret}")
+    print(f"region: {region}")
+    print(f"auth_flow: {auth_flow}")
+
     message = bytes(username + client_id, "utf-8")
     client_secret = bytes(client_secret, "utf-8")
     secret_hash = base64.b64encode(
         hmac.new(client_secret, message, digestmod=hashlib.sha256).digest()
     ).decode()
+    print(f"client_secret: {client_secret}")
+    print(f"secret_hash: {secret_hash}")
 
     client = boto3.client("cognito-idp", region_name=region)
     response = client.initiate_auth(
