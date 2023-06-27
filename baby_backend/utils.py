@@ -2,6 +2,7 @@ import environ
 import base64
 import requests
 import boto3
+import botocore
 import json
 import os
 import sys, hmac, hashlib
@@ -10,6 +11,17 @@ from jwt import PyJWKClient
 from django.http import HttpResponseRedirect
 
 env = environ.Env()
+
+
+def get_secret_hash(username: str, client_secret: str, client_id: str):
+    # A keyed-hash message authentication code (HMAC) calculated using
+    # the secret key of a user pool client and username plus the client
+    # ID in the message.
+    message = username + client_id
+    dig = hmac.new(
+        client_secret, msg=message.encode("UTF-8"), digestmod=hashlib.sha256
+    ).digest()
+    return base64.b64encode(dig).decode()
 
 
 def cognito_initiate_auth(username: str, password: str):
@@ -25,23 +37,28 @@ def cognito_initiate_auth(username: str, password: str):
 
     message = bytes(username + client_id, "utf-8")
     client_secret = bytes(client_secret, "utf-8")
-    secret_hash = base64.b64encode(
+    """secret_hash = base64.b64encode(
         hmac.new(client_secret, message, digestmod=hashlib.sha256).digest()
-    ).decode()
+    ).decode()"""
+    secret_hash = get_secret_hash(
+        username=username, client_secret=client_secret, client_id=client_id
+    )
     print(f"client_secret: {client_secret}")
     print(f"secret_hash: {secret_hash}")
 
-    client = boto3.client("cognito-idp", region_name=region)
-    response = client.initiate_auth(
-        ClientId=client_id,
-        AuthFlow=auth_flow,
-        AuthParameters={
-            "USERNAME": username,
-            "PASSWORD": password,
-            "SECRET_HASH": secret_hash,
-        },
-    )
-    return response
+    try:
+        client = boto3.client("cognito-idp", region_name=region)
+        return client.initiate_auth(
+            ClientId=client_id,
+            AuthFlow=auth_flow,
+            AuthParameters={
+                "USERNAME": username,
+                "PASSWORD": password,
+                "SECRET_HASH": secret_hash,
+            },
+        )
+    except botocore.exceptions.ClientError as e:
+        return e.response
 
 
 def get_user_data(token: str):
