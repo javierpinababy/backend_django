@@ -6,6 +6,7 @@ from baby_backend.utils import (
     cognito_initiate_auth,
     cognito_global_sign_out,
     get_user_data,
+    login_cognito_chatgpt,
 )
 
 
@@ -33,7 +34,8 @@ class LoginView(APIView):
             print(f"username: {username}")
             print(f"password: {password}")
 
-            response = cognito_initiate_auth(username=username, password=password)
+            response = login_cognito_chatgpt(username=username, password=password)
+            # response = cognito_initiate_auth(username=username, password=password)
             print(f"response: {response}")
 
             request.session["AuthenticationResult"] = response.get(

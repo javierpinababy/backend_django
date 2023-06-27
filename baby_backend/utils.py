@@ -86,3 +86,31 @@ def cognito_global_sign_out():
     url = f"{domain}logout?client_id={client_id}&logout_uri={redirect_uri}"
 
     return url
+
+
+def login_cognito_chatgpt(username: str, password: str):
+    client = boto3.client("cognito-idp")
+
+    client_id = env("AWS_COGNITO_CLIENT_ID")
+    client_secret = env("AWS_COGNITO_CLIENT_SECRET")
+    username = username
+    password = password
+
+    # Calculate the SecretHash
+    message = username + client_id
+    key = client_secret.encode("utf-8")
+    msg = message.encode("utf-8")
+    digest = hmac.new(key, msg, hashlib.sha256).digest()
+    secret_hash = base64.b64encode(digest).decode()
+
+    response = client.initiate_auth(
+        AuthFlow="USER_PASSWORD_AUTH",
+        ClientId=client_id,
+        AuthParameters={
+            "USERNAME": username,
+            "PASSWORD": password,
+            "SECRET_HASH": secret_hash,
+        },
+    )
+
+    print(response)
