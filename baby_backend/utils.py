@@ -89,7 +89,8 @@ def cognito_global_sign_out():
 
 
 def login_cognito_chatgpt(username: str, password: str):
-    client = boto3.client("cognito-idp")
+    region = env("AWS_REGION")
+    client = boto3.client("cognito-idp", region_name=region)
 
     client_id = env("AWS_COGNITO_CLIENT_ID")
     client_secret = env("AWS_COGNITO_CLIENT_SECRET")
