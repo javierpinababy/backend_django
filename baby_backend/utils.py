@@ -110,7 +110,7 @@ def login_cognito_chatgpt(username: str, password: str):
         AuthParameters={
             "USERNAME": username,
             "PASSWORD": password,
-            # "SECRET_HASH": secret_hash,
+            "SECRET_HASH": secret_hash,
         },
     )
 
