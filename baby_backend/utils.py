@@ -126,6 +126,7 @@ def login_cognito_chatgpt(username: str, password: str):
             ChallengeName=challenge_name,
             ChallengeResponses=challenge_responses,
             Session=session,
+            SecretHash=secret_hash,
         )
 
     print(f"response: {response}")
