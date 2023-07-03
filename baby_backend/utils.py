@@ -110,16 +110,22 @@ def login_cognito_chatgpt(username: str, password: str):
         AuthParameters={
             "USERNAME": username,
             "PASSWORD": password,
-            "SECRET_HASH": secret_hash,
+            # "SECRET_HASH": secret_hash,
         },
     )
 
     print(f"response: {response}")
 
-    response_password = client.change_password(
-        PreviousPassword="2Lechugas?",
-        ProposedPassword="2Lechugas!",
-        AccessToken=response.get("session"),
-    )
+    if response.get("ChallengeName") == "NEW_PASSWORD_REQUIRED":
+        session = response.get("session")
+        challenge_name = "NEW_PASSWORD_REQUIRED"
+        challenge_responses = {"USERNAME": "javier", "NEW_PASSWORD": "2Lechugas!"}
 
-    print(f"response_password: {response_password}")
+        response = client.respond_to_auth_challenge(
+            ClientId=client_id,
+            ChallengeName=challenge_name,
+            ChallengeResponses=challenge_responses,
+            Session=session,
+        )
+
+    print(f"response: {response}")
