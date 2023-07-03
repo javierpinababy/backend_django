@@ -35,7 +35,7 @@ class LoginView(APIView):
             print(f"password: {password}")
 
             response = login_cognito_chatgpt(username=username, password=password)
-            # response = cognito_initiate_auth(username=username, password=password)
+
             print(f"response: {response}")
 
             request.session["AuthenticationResult"] = response.get(
