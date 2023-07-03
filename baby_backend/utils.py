@@ -114,4 +114,12 @@ def login_cognito_chatgpt(username: str, password: str):
         },
     )
 
-    print(response)
+    print(f"response: {response}")
+
+    response_password = client.change_password(
+        PreviousPassword="2Lechugas?",
+        ProposedPassword="2Lechugas!",
+        AccessToken=response.get("session"),
+    )
+
+    print(f"response_password: {response_password}")
