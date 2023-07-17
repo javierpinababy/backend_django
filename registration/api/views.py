@@ -49,6 +49,7 @@ class LoginView(APIView):
             request.session["groups"] = user_data["cognito:groups"]
 
             print(f"serializer: {serializer}")
+            serializer.data["token"] = id_token
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
