@@ -22,37 +22,6 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-    def get(self, request):
-        serializer = TestUserSerializer(data=request.data)
-
-        if serializer.is_valid(raise_exception=True):
-            # serializer.save()
-
-            username = serializer.data.get("username")
-            password = serializer.data.get("password")
-
-            print(f"username: {username}")
-            print(f"password: {password}")
-
-            response = login_cognito_chatgpt(username=username, password=password)
-
-            print(f"response: {response}")
-
-            request.session["AuthenticationResult"] = response.get(
-                "AuthenticationResult"
-            )
-
-            id_token = response.get("AuthenticationResult").get("IdToken")
-            user_data = get_user_data(id_token)
-
-            request.session["user_data"] = user_data
-            request.session["groups"] = user_data["cognito:groups"]
-
-            response["user_data"] = user_data
-
-            return Response(response, status=status.HTTP_200_OK)
-        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
-
     def post(self, request):
         serializer = TestUserSerializer(data=request.data)
 
@@ -62,12 +31,7 @@ class LoginView(APIView):
             username = serializer.data.get("username")
             password = serializer.data.get("password")
 
-            print(f"username: {username}")
-            print(f"password: {password}")
-
             response = login_cognito_chatgpt(username=username, password=password)
-
-            print(f"response: {response}")
 
             request.session["AuthenticationResult"] = response.get(
                 "AuthenticationResult"
