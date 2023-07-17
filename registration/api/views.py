@@ -50,6 +50,7 @@ class LoginView(APIView):
 
             print(f"serializer: {serializer}")
             serializer.data["token"] = id_token
+            serializer.data["user_data"] = user_data
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)

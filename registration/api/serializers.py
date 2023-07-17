@@ -33,7 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
 class TestUserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=200)
     password = serializers.CharField()
-    token = serializers.CharField()
 
     def validate_username(self, value):
         if value == "":
