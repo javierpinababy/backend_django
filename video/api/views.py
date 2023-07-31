@@ -5,9 +5,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from video.models import Video
 from video.api.serializers import VideoSerializer
 
+from .permissions import ValidCognitoTokenPermission
+
 
 class VideoApiViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [ValidCognitoTokenPermission]
     serializer_class = VideoSerializer
     queryset = Video.objects.all()
     http_method_names = ["get", "post"]
