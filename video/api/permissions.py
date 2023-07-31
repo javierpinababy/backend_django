@@ -7,7 +7,7 @@ class ValidCognitoTokenPermission(BasePermission):
     def has_permission(self, request, view):
         try:
             # Obtén el token de la solicitud
-            print(f"ValidCognito_request: {request}")
+            print(f"ValidCognito_request: {request.__dict__}")
             token = request.META.get("HTTP_AUTHORIZATION", "").split(" ")[1]
             print(f"ValidCognito_token: {token}")
             # Verifica la validez del token utilizando el servicio de Cognito
